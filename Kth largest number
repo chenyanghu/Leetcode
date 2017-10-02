@@ -1,0 +1,35 @@
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        if(nums.length == 0 || nums == null)
+            return Integer.MAX_VALUE;
+        return helper(nums, 0, nums.length - 1, k);
+    }
+    
+    private int helper(int[] nums, int start, int end, int k){
+        if(start > end) return Integer.MAX_VALUE;
+        
+        int pivot = nums[start];
+        int index = start;
+        
+        // randomized kth quick sort
+        for(int i = start + 1; i <= end; i++){
+            if(nums[i] <= pivot){
+                int temp = nums[i];
+                nums[i] = nums[++index];
+                nums[index] = temp;
+            }    
+        }
+        
+        int temp = nums[index];
+        nums[index] = nums[start];
+        nums[start] = temp;
+        
+        if(index == nums.length - k)
+            return nums[index];
+        else
+            if(index < nums.length - k)
+                return helper(nums, index + 1, end, k);
+            else
+                return helper(nums, start, index - 1, k);
+    }
+}
