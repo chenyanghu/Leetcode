@@ -1,0 +1,42 @@
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList[] graph = new ArrayList[numCourses];
+        for(int i = 0; i < numCourses; i ++){
+            graph[i] = new ArrayList<Integer>();
+        }
+        
+        //degree to store which course needs prerequisite
+        //graph to store what prerequisites are for a course
+        
+        int[] degree = new int[numCourses];
+        for(int i = 0; i < prerequisites.length; i++){
+            degree[prerequisites[i][1]] ++;
+            graph[prerequisites[i][0]].add(prerequisites[i][1]);
+        }
+        
+        //store the courses can be finished
+        Queue queue = new LinkedList();
+        int count = 0;//number of course can be finished
+        
+        for(int i = 0; i < degree.length; i++){
+            if(degree[i] == 0){
+                queue.add(i);
+                count ++;
+            }   
+        }
+        
+        while(queue.size() != 0){
+            int course = (int)queue.poll();
+            //find which course can be finished after taken the selected course
+            //selected course need no pre or has been proved to finish
+            for(int i = 0; i < graph[course].size(); i++){
+                int temp = (int)graph[course].get(i);
+                degree[temp] --;
+                if(degree[temp] == 0){
+                    queue.add(temp);
+                    count ++;
+                }
+            }
+        }
+        if(count == numCourses) return true;
+        else return false;
+    }
